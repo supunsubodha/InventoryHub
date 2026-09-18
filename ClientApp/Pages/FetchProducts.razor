@@ -1,4 +1,5 @@
-﻿@page "/fetchproducts"
+﻿@inject HttpClient http
+@page "/fetchproducts"
 
 <h3>Product List</h3>
 
@@ -16,11 +17,18 @@ else
 }
 </ul>
 
-    @code {
+@code {
 private Product[]? products;
 protected override async Task OnInitializedAsync()
 {
-    // API call logic will go here
+    try
+    {
+        products = await http.GetFromJsonAsync<Product[]>("http://localhost:5246/api/products");
+    }
+    catch(Exception ex)
+    {
+        Console.WriteLine($"Error fetching products: {ex.Message}");
+    }
 }
 
 public class Product
